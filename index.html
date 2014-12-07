@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <title>dVoice 0.0.1-alpha</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/bootstrap-responsive.css" rel="stylesheet">
+</head>
+<body>
+<!--Заголовок-->
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container-fluid">
+            <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+
+            <div     class="brand" >dVoice 0.0.1-alpha</div>
+            <div class="gender-wrap"><img class="gender-image" src=""></div>
+            <div class="day-time"><span class="day-of-week">Понедельник</span><br><span class="time-of-day">10:00</span></div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row-fluid">
+
+<!--Левая панель-->
+        <div class="span3">
+            <div class="well sidebar-nav">
+                <ul class="nav nav-list left-nav-bar">
+<!--Аватарка-->
+                    <li><img class="avatar rounded-border" src="images/misc/avatar_unknown.png" /></li>
+
+                    <li style="display: none" class="label-header master-name-label">Хозяйка:
+                    <span class="label-text">Шанти</span>
+                    </li>
+<!--Контроль-->
+                    <li style="display: none" class="label-header control-element">Контроль: <span class="label-text" id="control-element-value">0</span>
+                        <div class="progress">
+                            <div class="bar bar-danger" style="width: 0%;"></div>
+                            <div class="bar bar-warning" style="width: 0%;"></div>
+                            <div class="bar bar-success" style="width: 0%;"></div>
+                        </div>
+                    </li>
+<!--Возбуждение-->
+                    <li style="display: none" class="label-header excitation-element">Возбуждение:
+                        <div class="progress">
+                            <div class="bar bar-danger" style="width: 0%;"></div>
+                            <div class="bar bar-warning" style="width: 0%;"></div>
+                            <div class="bar bar-success" style="width: 0%;"></div>
+                        </div>
+                    </li>
+
+                    <li style="display: none" class="label-header">Раскрепощенность: <span class="label-text">0</span></li>
+                    <li style="display: none">
+                        <div class="progress">
+                            <div class="bar bar-danger" style="width: 0%;"></div>
+                            <div class="bar bar-warning" style="width: 0%;"></div>
+                            <div class="bar bar-success" style="width: 0%;"></div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+<!--Основной контент-->
+        <div class="span9">
+            <div class="content-frame">
+                <div class="content-block">
+
+                </div>
+            </div>
+        </div>
+    </div>
+<!--Область сообщений-->
+    <div class="hero-unit message-block">
+        <div class="message">
+        </div>
+    </div>
+<!--Область ответов-->
+    <div class="hero-unit answer-block">
+            <div class="variants" >
+                <ul class="nav nav-list">
+                    <li>
+                       <a href="#">
+
+                       </a>
+                    </li>
+                </ul>
+            </div>
+       </div>
+
+</div>
+<script src="js/jquery.js"></script>
+<script src="js/require.js"></script>
+<script src="js/core/core.js"></script>
+<script src="js/core/locations.js"></script>
+<script>
+
+</script>
+<script>
+    $(document).ready(function() {
+        Avatar.setImage('images/misc/avatar_3.png');
+        MasterNameLabel.setName('Шанти').show();
+        Gender.set('man');
+        Master.control.increaseBy(1);
+        Control.show();
+        Time.show();
+        Day.show();
+        Excitation.show();
+        Locations.goTo('lab');
+
+
+    });
+</script>
+</body>
+</html>
