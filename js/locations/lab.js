@@ -3,7 +3,7 @@ $.extend(Locations.lab, {
 	step: 0,
 	/** Загрузка локации*/
 	load: function () {
-
+		console.log('LAB LOADED');
 		Master.excitation.set(0);
 		lText = Game.getText('lab');
 		stepKey = 'step' + this.step;
@@ -88,7 +88,7 @@ $.extend(Locations.lab, {
 					{   text: lText[stepKey].answer1,
 						action: function () {
 							Gender.set('woman');
-							Master.control.increaseBy(5);
+							Master.control.increaseBy(50);
 							Locations.lab.step++;
 							Locations.lab.load();
 						}
@@ -97,7 +97,7 @@ $.extend(Locations.lab, {
 					{   text: lText[stepKey].answer2,
 						action: function () {
 							Gender.set('man');
-							Master.control.increaseBy(1);
+							Master.control.increaseBy(10);
 							Locations.lab.step++;
 							Locations.lab.load();
 						}
@@ -106,7 +106,7 @@ $.extend(Locations.lab, {
 					{   text: lText[stepKey].answer3,
 						action: function () {
 							Gender.set('woman');
-							Master.control.increaseBy(5);
+							Master.control.increaseBy(50);
 							Locations.lab.step++;
 							Locations.lab.load();
 						}
@@ -115,7 +115,7 @@ $.extend(Locations.lab, {
 					{   text: lText[stepKey].answer4,
 						action: function () {
 							Gender.set('man');
-							Master.control.increaseBy(1);
+							Master.control.increaseBy(10);
 							Locations.lab.step++;
 							Locations.lab.load();
 						}

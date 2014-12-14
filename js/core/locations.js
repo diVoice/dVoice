@@ -1,66 +1,70 @@
 Locations = {
 	/**Лабратория, начальная локация.*/
-	lab: {
+	lab: new Location({
 		entrancePoints: 0,
 		isRandom: false
-	},
-	bath: {
+	}),
+	bath: new Location({
 		entrancePoints: 20,
 		isRandom: true,
 		time: [1,3],
 		week: [1,2,3,4,5,6,7]
-	},
-	school: {
+	}),
+	school:  new Location({
+		name:'Универ',
 		entrancePoints: 0,
 		isRandom: true,
 		time: [1,2],
 		week: [1,2,3,4,5]
-	},
-	bedroom: {
+	}),
+	bedroom: new Location({
 		entrancePoints: 0,
 		isRandom: true,
 		time: [2,3],
 		week: [1,2,3,4,5,6,7]
-	},
-	night: {
+	}),
+	night: new Location({
 		entrancePoints: 0,
 		isRandom: true,
 		time: [0],
 		week: [1,2,3,4,5,6,7]
-	},
-	kitchen: {
+	}),
+	kitchen: new Location({
 		entrancePoints: 20,
 		isRandom: true,
 		time: [1,3],
 		week: [1,2,3,4,5,6,7]
-	},
-	nature: {
+	}),
+	nature: new Location({
 		entrancePoints: 0,
 		isRandom: true,
 		time: [1,2,3],
 		week: [6,7]
-	},
-	party: {
+	}),
+	party: new Location({
 		entrancePoints: 0,
 		isRandom: true,
 		time: [1,2,3],
 		week: [6,7]
-	},
-	sister: {
+	}),
+	sister: new Location({
 		entrancePoints: 20,
 		isRandom: true,
 		time: [2,3],
 		week: [1,2,3,4,5]
-	},
-	walk: {
+	}),
+	walk: new Location({
 		entrancePoints: 0,
 		isRandom: true,
 		time: [2,3],
 		week: [1,2,3,4,5,6,7]
-	},
+	}),
 	goTo: function(locationName) {
+		if (typeof Game.getCurrentLocation().onLeave != 'undefined') {
+			Game.getCurrentLocation().onLeave();
+		}
 		if (locationName == 'random') {
-			availableLocations = gArray;
+			availableLocations = new gArray;
 				i=0;
 			for (oneLocation in this) {
 				if (Locations[oneLocation].isRandom
@@ -69,8 +73,12 @@ Locations = {
 						availableLocations.push(oneLocation);
 				}
 			}
+			/** Устанавливаем рандомную возбужденность*/
+			Master.excitation.setRandom();
 			locationName = availableLocations.getRandom();
 		}
+		locationName = 'school';
+		console.log(locationName);
 		//Загружаем файл локации и его локализацию и все файлы
 		if (typeof Locations[locationName].localization == "undefined") {
 			require(
@@ -79,14 +87,15 @@ Locations = {
 				],
 				function (util) {
 /** TODO: Отключить*/
-Locations.lab.step=11;
-
-					Locations[locationName].load();
+//Locations.lab.step=11;
+					Locations.load(locationName);
 				});
 		} else {
-			Locations[locationName].load();
+			Locations.load(locationName);
 		}
+	},
+	load: function(locationName) {
+		Game.setCurrenLocation(Locations[locationName]);
+		Locations[locationName].load();
 	}
 };
-
-Locations.goTo('lab');

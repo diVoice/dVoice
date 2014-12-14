@@ -4,39 +4,69 @@ var Master = {
 	control: {
 		/**Увеличить контроль на заданную величину*/
 		increaseBy: function (value) {
-			Master.control.value += value;
-			Master.control.set(Master.control.value > 100 ? 100 : Master.control.value);
+			newValue = Master.control.value + value;
+			Master.control.set(newValue > 1000 ? 1000 : newValue);
 		},
 		/**Уменшить контроль на заданную величину*/
 		decreaseBy: function (value) {
-			Master.control.value -= value;
-			Master.control.set(Master.control.value < 0 ? 0 : Master.control.value);
+			newValue = Master.control.value - value;
+			Master.control.set(newValue < 0 ? 0 : newValue);
 		},
+
 		/**Устанавливает уровень контроль в заданную величину*/
 		set: function (value) {
+			diff = value - Master.control.value;
 			Master.control.value = value;
-			Control.set(value);
+			Control.set(value/10, diff);
+
+		},
+		get: function() {
+			return this.value;
+		},
+		getState: function() {
+			if (this.value >= 700) {
+				return 2;
+			}
+			if (this.value >= 300) {
+				return 1;
+			}
+			return 0;
 		},
 		/**Текущее значение контроля*/
 		value: 0
 	},
 	/**Уровень возбуждения, глобальный*/
 	excitation: {
+		maxValue: 10,
 		/**Увеличить возбуждение на заданную величину*/
 		increaseBy: function (value) {
-			Master.excitation.value += value;
-			Master.excitation.set(Master.excitation.value > 100 ? 100 : Master.excitation.value);
+			newValue = Master.excitation.value + value;
+			Master.excitation.set(newValue > this.maxValue ? this.maxValue : newValue);
+			//Master.excitation.value += value;
+			//Master.excitation.set(Master.excitation.value > 100 ? 100 : Master.excitation.value);
 		},
 		/**Уменшить возбуждение на заданную величину*/
 		decreaseBy: function (value) {
-			Master.excitation.value -= value;
-			Master.excitation.set(Master.excitation.value < 0 ? 0 : Master.excitation.value);
+			newValue = Master.excitation.value - value;
+			Master.excitation.set(newValue < 0 ? 0 : newValue);
+
+			//Master.excitation.value -= value;
+			//Master.excitation.set(Master.excitation.value < 0 ? 0 : Master.excitation.value);
+		},
+		setRandom: function(){
+			max = 3;
+			r = Math.floor(Math.random() * (max + 1));
+			this.set(r);
 		},
 		/**Устанавливает уровень возбуждения в заданную величину*/
 		set: function (value) {
+			diff = value - Master.excitation.value;
 			iValue = value * 10;
 			Master.excitation.value = value;
-			Excitation.set(iValue);
+			Excitation.set(iValue, diff);
+		},
+		get: function() {
+			return this.value;
 		},
 		/**Текущее значение возбуждения*/
 		value: 0
@@ -46,6 +76,13 @@ var Master = {
 		this.excitation.set(0);
 	}
 };
+
+function getRandomFromArray(array) {
+	max = array.length + 1;
+	min = 1;
+	/*Math.floor(Math.random() * (max - min + 1)) + min*/
+	return array[Math.floor(Math.random() * (max - min + 1)) + min];
+}
 
 var Avatar = {
 	element: $('.avatar'),
@@ -59,20 +96,25 @@ var Avatar = {
 
 /**
  * Элемент "Контроль" с прогрессбаром
+ * 0-1000
  */
 var Control = {
-	red: 15,
-	mid: 55,
+	red: 30,
+	mid: 70,
+	updateViewElement: $('.control-tip'),
 	element: $('.control-element'),
 	/**Устанавливает прогресс бар "Контроль" на заданную величину*/
-	set: function (value) {
+	set: function (value, diff) {
+		var vElementColor = diff < 0 ? '#dd514c' /*red*/: '#57a957' /*green*/;
+		var vElementValue = diff < 0 ? diff : '+' + diff;
+		this.updateViewElement.html(vElementValue).css('color', vElementColor).fadeIn(1000).fadeOut(1000);
 		var newValue = value;
-		Control.element.find('#control-element-value').html(value);
+		Control.element.find('#control-element-value').html(value * 10);
 		var diffValue = 0;
 		/*зеленая*/
-		if (newValue > Control.red + Control.mid) {
-			diffValue = newValue - (Control.red + Control.mid);
-			newValue = Control.red + Control.mid;
+		if (newValue > Control.mid) {
+			diffValue = newValue - Control.mid;
+			newValue = Control.mid;
 		}
 		Control.element.find('.bar-success').css('width', diffValue + '%');
 		/*желтая*/
@@ -106,9 +148,15 @@ var Control = {
 var Excitation = {
 	red: 20,
 	mid: 60,
+	updateViewElement: $('.excitation-tip'),
 	element: $('.excitation-element'),
 	/**Устанавливает прогресс бар "Возбуждение" на заданную величину*/
-	set: function (value) {
+	set: function (value, diff) {
+		var vElementColor = diff < 0 ? '#dd514c' /*red*/: '#57a957' /*green*/;
+		var vElementValue = diff < 0 ? diff : '+' + diff;
+		if (diff !=0) {
+			this.updateViewElement.html(vElementValue).css('color', vElementColor).fadeIn(1000).fadeOut(1000);
+		}
 		var newValue = value;
 		var diffValue = 0;
 		/*зеленая*/
@@ -235,6 +283,22 @@ var Game = {
 	},
 	getText: function(location) {
 		return Locations[location]['localization'];
+	},
+	takeAChance: function(chance) {
+		/*рандом от 100*/
+		max = 100;
+		min = 1;
+		rand = Math.floor(Math.random() * (max - min + 1)) + min;
+		c = (Master.control.get() / 10 + (Master.excitation.get() * 2)) + rand;
+		return c >= chance;
+	},
+	currentLocation: 'lab',
+	setCurrenLocation: function(currentLocation) {
+		this.currentLocation = currentLocation;
+		return this;
+	},
+	getCurrentLocation: function() {
+		return this.currentLocation;
 	}
 };
 
@@ -320,7 +384,44 @@ var VariantsBlock = {
 		$ul = this.element.find('ul.nav-list');
 		$ul.html('');
 		for(oneVariant in variants) {
-			$item = $('<li />').append($('<a href="#" />').html(variants[oneVariant].text).click(variants[oneVariant].action));
+			color = 0;
+			colorHex = 'transparent';
+			tipHelp = '';
+			/** Показываем шанс*/
+
+			if (typeof variants[oneVariant].dialogName != 'undefined') {
+				dialogName = variants[oneVariant].dialogName;
+				chance = variants[oneVariant].chance;
+
+				c = Math.floor(Master.control.get()/10 + (Master.excitation.get() * 2));
+				color = 100 - chance + c;
+				//color = 100 - variants[oneVariant].chance + c;
+				color = color > 100 ? 100 : color;
+				color = color < 0 ? 0 : color;
+				colorHex = '#dd514c';
+				if (color > 30) {
+					colorHex = '#faa732';
+				}
+				if (color >= 80) {
+					colorHex = '#5eb95e';
+				}
+				tipHelp = color + '% ' + chance+' - ';
+				//tipHelp = color + ' "' + variants[oneVariant].chance;
+			}
+
+			if (typeof variants[oneVariant].action == 'undefined' ) {
+				variants[oneVariant].action = function() {
+					Game.getCurrentLocation().setCurrentDialog(typeof $(this).data('self') != 'undefined' ? $(this).data('self') : new Dialog());
+					Game.getCurrentLocation().load();
+				};
+			}
+			v = oneVariant;
+			$item = $('<li />')
+				.append($('<div class="chance" />').css('background-color', colorHex))
+				.append($('<a href="#" />').html(tipHelp + variants[oneVariant].text)
+					.data('self', variants[oneVariant])
+					.click(variants[oneVariant].action));
+								//.click(variants[oneVariant].action));
 			$ul.append($item);
 		}
 	},
@@ -333,12 +434,59 @@ var VariantsBlock = {
 		this.setVariants([]);
 	}
 };
-gArray = new Array;
-gArray.getRandom = function() {
-		max = this.length;
-		console.log(max);
-		r= this[Math.floor(Math.random() * (max - 1))];
-		console.log(r);
+gArray = function() {
+	this.getRandom = function () {
+		max = this.array.length;
+		r = this.array[Math.floor(Math.random() * (max - 1))];
 		/*Math.floor(Math.random() * (max - min + 1)) + min*/
 		return r;
 	};
+	this.array = new Array;
+	this.push = function(val) {
+		this.array.push(val);
+	}
+};
+
+
+Location = function(params) {
+	this.entrancePoints = 0;
+	this.isRandom = true;
+	this.time = [];
+	this.week = [];
+	this.set = function (params) {
+		$.extend(this, params);
+		return this;
+	};
+
+	if (typeof params != 'undefined') {
+		this.set(params);
+	}
+	this.getCurrentDialog = function() {
+		selectedDialog = Game.getCurrentLocation().selectedDialog;
+		return selectedDialog;
+	};
+	this.setCurrentDialog = function(selectedDialog) {
+		Game.getCurrentLocation().selectedDialog = selectedDialog;
+		return this;
+	};
+	return this;
+};
+
+var Dialog = function(params) {
+	this.dialogName = 'main';
+	this.getName = function () {
+		return this.dialogName
+	};
+	this.set = function (params) {
+		$.extend(this, params);
+		return this;
+	};
+
+	if (typeof params != 'undefined') {
+		this.set(params);
+	}
+};
+
+function addZero() {
+
+}

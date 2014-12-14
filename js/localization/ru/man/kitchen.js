@@ -1,4 +1,4 @@
-Locations.school.localization = {
+Locations.kitchen.localization = {
 	shantyName: 'Шанти',
 	step0: {
 		answer1: "Пуск",

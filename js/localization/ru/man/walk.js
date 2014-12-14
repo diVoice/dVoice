@@ -1,4 +1,4 @@
-Locations.school.localization = {
+Locations.walk.localization = {
 	shantyName: 'Шанти',
 	step0: {
 		answer1: "Пуск",

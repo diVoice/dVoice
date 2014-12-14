@@ -59,6 +59,7 @@ body {
 }
 .label-text {
     color: #0088cc;
+    width: 40px;
 }
 .label-header {
     font-size: 14px;
@@ -97,5 +98,35 @@ body {
     color: #A6A6A6;
     text-align: center;
     font-weight: bold;
+    width: 100px;
+    float: left;
+}
+.day-of-week, .time-of-day {
     display: none;
+}
+.chance {
+    float: left;
+    width: 5px;
+    height: 19px;
+    background-color: transparent;
+    margin: 7px 5px 0px -12px;
+    border-radius: 3px;
+}
+.progress {
+    clear: both;
+}
+.location {
+    float: right;
+    color: #999;
+    font-weight: bold;
+    padding: 10px;
+}
+.control-tip, .excitation-tip {
+    display: none;
+}
+.float {
+    float: left;
+}
+.excitation-element-label {
+    width: 120px;
 }

@@ -24,6 +24,7 @@
             <div     class="brand" >dVoice 0.0.1-alpha</div>
             <div class="gender-wrap"><img class="gender-image" src=""></div>
             <div class="day-time"><span class="day-of-week">Понедельник</span><br><span class="time-of-day">10:00</span></div>
+            <div class="location">Универ</div>
         </div>
     </div>
 </div>
@@ -42,7 +43,8 @@
                     <span class="label-text">Шанти</span>
                     </li>
 <!--Контроль-->
-                    <li style="display: none" class="label-header control-element">Контроль: <span class="label-text" id="control-element-value">0</span>
+                    <li style="display: none" class="label-header control-element"><div class="control-header float">Контроль: </div><div class="label-text float" id="control-element-value">0</div>
+                        <div class="control-tip">0</div>
                         <div class="progress">
                             <div class="bar bar-danger" style="width: 0%;"></div>
                             <div class="bar bar-warning" style="width: 0%;"></div>
@@ -50,7 +52,10 @@
                         </div>
                     </li>
 <!--Возбуждение-->
-                    <li style="display: none" class="label-header excitation-element">Возбуждение:
+                    <li style="display: none" class="label-header excitation-element">
+                        <div class="control-header float excitation-element-label">Возбуждение:</div>
+                        <div class="excitation-tip">+10</div>
+
                         <div class="progress">
                             <div class="bar bar-danger" style="width: 0%;"></div>
                             <div class="bar bar-warning" style="width: 0%;"></div>
@@ -87,7 +92,7 @@
     <div class="hero-unit answer-block">
             <div class="variants" >
                 <ul class="nav nav-list">
-                    <li>
+                    <li><div class="chance"></div>
                        <a href="#">
 
                        </a>
@@ -105,16 +110,44 @@
 
 </script>
 <script>
+
+//    Location = function(params) {
+//        this.entrancePoints = 0;
+//        this.isRandom = true;
+//        this.time = [];
+//        this.week = [];
+//        this.set = function (params) {
+//            $.extend(this, params);
+//        };
+//
+//        if (typeof params != 'undefined') {
+//            this.set(params);
+//        }
+//    };
+//    l = new Location({
+//        entrancePoints: 0,
+//        isRandom: true,
+//        time: [1,2],
+//        week: [1,2,3,4,5]
+//    });
+//    console.log(l.week);
     $(document).ready(function() {
+//        var require = {
+//            baseUrl: "",
+//            urlArgs : "bust="+new Date().getTime()
+//        };
         Avatar.setImage('images/misc/avatar_3.png');
         MasterNameLabel.setName('Шанти').show();
         Gender.set('man');
-        Master.control.increaseBy(1);
+        Master.control.increaseBy(50);
+        Master.excitation.setRandom();
         Control.show();
         Time.show();
         Day.show();
         Excitation.show();
-        Locations.goTo('lab');
+//        Excitation.setRandom();
+
+        Locations.goTo('school');
 
 
     });
