@@ -5,6 +5,7 @@ Locations = {
 		isRandom: false
 	}),
 	bath: new Location({
+		name: 'Ванна',
 		entrancePoints: 20,
 		isRandom: true,
 		time: [1,3],
@@ -62,6 +63,7 @@ Locations = {
 	goTo: function(locationName) {
 		if (typeof Game.getCurrentLocation().onLeave != 'undefined') {
 			Game.getCurrentLocation().onLeave();
+			console.log('ON LEAVING');
 		}
 		if (locationName == 'random') {
 			availableLocations = new gArray;
@@ -77,7 +79,7 @@ Locations = {
 			Master.excitation.setRandom();
 			locationName = availableLocations.getRandom();
 		}
-		locationName = 'school';
+		locationName = 'sister';
 		console.log(locationName);
 		//Загружаем файл локации и его локализацию и все файлы
 		if (typeof Locations[locationName].localization == "undefined") {

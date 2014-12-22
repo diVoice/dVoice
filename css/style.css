@@ -33,6 +33,7 @@ body {
 
 .content-block {
     width: 860px;
+    display: flex;
 }
 
 .left-nav-bar {

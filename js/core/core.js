@@ -231,10 +231,13 @@ var Gender = {
 var ContentBlock = {
 	element: $('.content-block'),
 	setImage: function(src, additionslParams) {
-		params = {src: src, class: 'rounded-border', width: '860px'};
+		params = {src: src, class: 'rounded-border'};
 		$.extend(params, additionslParams)
 		$img = $('<img />', params);
-		this.element.html($img);
+		this.element.html($img.css({
+			'max-width': '860px',
+			'max-height': '541px',
+			'margin': '0 auto'}));
 	},
 	clear: function() {
 		this.element.html('');
@@ -294,6 +297,7 @@ var Game = {
 	},
 	currentLocation: 'lab',
 	setCurrenLocation: function(currentLocation) {
+		LocationControl.set(currentLocation);
 		this.currentLocation = currentLocation;
 		return this;
 	},
@@ -384,50 +388,45 @@ var VariantsBlock = {
 		$ul = this.element.find('ul.nav-list');
 		$ul.html('');
 		for(oneVariant in variants) {
-			color = 0;
-			colorHex = 'transparent';
-			tipHelp = '';
-			/** Показываем шанс*/
-
-			if (typeof variants[oneVariant].dialogName != 'undefined') {
-				dialogName = variants[oneVariant].dialogName;
-				chance = variants[oneVariant].chance;
-
-				c = Math.floor(Master.control.get()/10 + (Master.excitation.get() * 2));
-				color = 100 - chance + c;
-				//color = 100 - variants[oneVariant].chance + c;
-				color = color > 100 ? 100 : color;
-				color = color < 0 ? 0 : color;
-				colorHex = '#dd514c';
-				if (color > 30) {
-					colorHex = '#faa732';
-				}
-				if (color >= 80) {
-					colorHex = '#5eb95e';
-				}
-				tipHelp = color + '% ' + chance+' - ';
-				//tipHelp = color + ' "' + variants[oneVariant].chance;
-			}
-
-			if (typeof variants[oneVariant].action == 'undefined' ) {
-				variants[oneVariant].action = function() {
-					Game.getCurrentLocation().setCurrentDialog(typeof $(this).data('self') != 'undefined' ? $(this).data('self') : new Dialog());
-					Game.getCurrentLocation().load();
-				};
-			}
-			v = oneVariant;
-			$item = $('<li />')
-				.append($('<div class="chance" />').css('background-color', colorHex))
-				.append($('<a href="#" />').html(tipHelp + variants[oneVariant].text)
-					.data('self', variants[oneVariant])
-					.click(variants[oneVariant].action));
-								//.click(variants[oneVariant].action));
-			$ul.append($item);
+			this.addVariant(variants[oneVariant]);
 		}
 	},
 	addVariant: function(variant) {
-		$ul = this.element.find('ul.nav-list');
-		$item = $('<li />').append($('<a href="#" />').html(variant.text).click(variant.action));
+		color = 0;
+		colorHex = 'transparent';
+		tipHelp = '';
+		/** Показываем шанс*/
+		if (typeof variant.dialogName != 'undefined' && typeof variant.chance != "undefined") {
+			dialogName = variant.dialogName;
+			chance = variant.chance;
+
+			c = Math.floor(Master.control.get()/10 + (Master.excitation.get() * 2));
+			color = 100 - chance + c;
+			//color = 100 - variant.chance + c;
+			color = color > 100 ? 100 : color;
+			color = color < 0 ? 0 : color;
+			colorHex = '#dd514c';
+			if (color > 30) {
+				colorHex = '#faa732';
+			}
+			if (color >= 80) {
+				colorHex = '#5eb95e';
+			}
+			tipHelp = color + '% ' + chance+' - ';
+		}
+
+		if (typeof variant.action == 'undefined' ) {
+			variant.action = function() {
+				Game.getCurrentLocation().setCurrentDialog(typeof $(this).data('self') != 'undefined' ? $(this).data('self') : new Dialog());
+				Game.getCurrentLocation().load();
+			};
+		}
+		v = oneVariant;
+		$item = $('<li />')
+			.append($('<div class="chance" />').css('background-color', colorHex))
+			.append($('<a href="#" />').html(tipHelp + variant.text)
+				.data('self', variant)
+				.click(variant.action));
 		$ul.append($item);
 	},
 	onNew: function() {
@@ -471,6 +470,13 @@ Location = function(params) {
 	};
 	return this;
 };
+
+var LocationControl = {
+	element: $('.location'),
+	set: function(Location) {
+		this.element.html(Location.name);
+	}
+}
 
 var Dialog = function(params) {
 	this.dialogName = 'main';

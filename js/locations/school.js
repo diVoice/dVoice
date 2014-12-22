@@ -1,11 +1,5 @@
 $.extend(Locations.school, {
 	/** Номер шага для диалога*/
-	step: 0,
-	isStory: false,
-	isEnd: false,
-	isJustCome: true,
-	win: false,
-
 	storyStep: 0,
 	selectedDialog: new Dialog({dialogName: 'main'}),
 	/** Загрузка локации*/
@@ -84,27 +78,25 @@ $.extend(Locations.school, {
 				}
 			break;
 			case 'controlExcitation':
-				Master.control.increaseBy(win ? 10 : -20);
-				Master.excitation.increaseBy(1);
 				if (win) {
+					Master.excitation.increaseBy(1);
+					Master.control.increaseBy(10);
 					ContentBlock.setImage('images/locations/school/002.png');
 				} else {
+					Master.control.decreaseBy(20);
 					ContentBlock.setImage('images/locations/school/loose.png');
 				}
 			break;
 			case 'Excitation':
-				Master.excitation.increaseBy(2);
 				if (win) {
+					Master.excitation.increaseBy(2);
 					ContentBlock.setImage('images/locations/school/002.png');
 				} else {
+					Master.control.decreaseBy(10);
 					ContentBlock.setImage('images/locations/school/loose.png');
 				}
 			break;
-			case 'story':
-
 			default : //main
-				//this.isEnd = false;
-
 		}
 		MessagesBlock.setText(lText.dialog[currentDialogName][win ? 'win' : 'loose'][Master.control.getState()]);
 		/** Прощальные диалоги */
